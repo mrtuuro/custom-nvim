@@ -72,7 +72,7 @@ return {
       require("nvim-treesitter.configs").setup({
         ensure_installed = { "lua", "c", "go" },
         auto_install = false,
-        highlight = { 
+        highlight = {
           enable = true,
         },
       })
