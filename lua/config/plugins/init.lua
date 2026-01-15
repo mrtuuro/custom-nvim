@@ -10,13 +10,15 @@ return {
     'folke/tokyonight.nvim',
     config = function()
       require('tokyonight').setup({
-        style = 'night', -- Options: night, storm, day
+        style = 'night',         -- Options: night, storm, day
         transparent = false,
         terminal_colors = true,
       })
       vim.cmd('colorscheme tokyonight')
     end,
   },
+
+  { "rebelot/kanagawa.nvim", name = "kanagawa" },
 
   "tpope/vim-fugitive",
 
@@ -57,7 +59,6 @@ return {
 
   {
     'nvim-telescope/telescope.nvim',
-    tag = '0.1.8',
     dependencies = {
       'nvim-lua/plenary.nvim',
       { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' }
@@ -66,7 +67,7 @@ return {
 
   {
     'nvim-treesitter/nvim-treesitter',
-    lazy = false,
+    branch = 'master',
     build = ':TSUpdate',
     config = function()
       require("nvim-treesitter.configs").setup({

@@ -20,7 +20,7 @@ end
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 vim.lsp.config('gopls', {
-  cmd = {"gopls"},
+  cmd = { vim.fn.exepath("gopls") },
   on_attach = lsp_attach,
   capabilities = capabilities,
   settings = {
