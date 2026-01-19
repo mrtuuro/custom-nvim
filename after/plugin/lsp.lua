@@ -23,6 +23,9 @@ vim.lsp.config('gopls', {
   cmd = { vim.fn.exepath("gopls") },
   on_attach = lsp_attach,
   capabilities = capabilities,
+  cmd_env = {
+    GOFLAGS = "-mod=mod",
+  },
   settings = {
     gopls = {
       buildFlags = { "-tags=integration" },
