@@ -10,7 +10,7 @@ return {
     'folke/tokyonight.nvim',
     config = function()
       require('tokyonight').setup({
-        style = 'night',         -- Options: night, storm, day
+        style = 'night', -- Options: night, storm, day
         transparent = false,
         terminal_colors = true,
       })
@@ -79,5 +79,25 @@ return {
       })
     end,
   },
+
+  {
+    "maxandron/goplements.nvim",
+    ft = "go",
+    opts = {
+      prefix = {
+        interface = "implemented by: ",
+        struct = "implements: ",
+      },
+    },
+  },
+
+  {
+    "romus204/go-tagger.nvim",
+    config = function()
+      require("go-tagger").setup({
+        skip_private = true,
+      })
+    end,
+  }
 
 }
