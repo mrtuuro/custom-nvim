@@ -45,5 +45,9 @@ return {
       cwd = vim.fn.expand("~/workspace/notification"),
       stop_cmd = "docker-compose stop consumer-smsnotification",
     },
+    cafemcore = {
+      cmd = "make run",
+      cwd = vim.fn.expand("~/workspace/go/cafem-studio/cafemcore"),
+    },
   },
 }
