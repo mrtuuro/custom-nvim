@@ -43,4 +43,4 @@ local live_multigrep = function (opts)
     }):find()
 end
 
-vim.keymap.set("n", "<leader>lg", live_multigrep)
+vim.keymap.set("n", "<leader>lg", live_multigrep, { desc = "Live multi-grep" })

@@ -1,0 +1,1 @@
+-- Treesitter textobjects configuration is in lua/config/plugins/init.lua
