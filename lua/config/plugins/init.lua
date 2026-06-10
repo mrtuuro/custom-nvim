@@ -97,16 +97,16 @@ return {
 
       -- Select textobjects
       local select_maps = {
-        { "af", "@function.outer", "Select around function" },
-        { "if", "@function.inner", "Select inside function" },
-        { "ac", "@class.outer", "Select around class/struct" },
-        { "ic", "@class.inner", "Select inside class/struct" },
-        { "aa", "@parameter.outer", "Select around parameter" },
-        { "ia", "@parameter.inner", "Select inside parameter" },
+        { "af", "@function.outer",    "Select around function" },
+        { "if", "@function.inner",    "Select inside function" },
+        { "ac", "@class.outer",       "Select around class/struct" },
+        { "ic", "@class.inner",       "Select inside class/struct" },
+        { "aa", "@parameter.outer",   "Select around parameter" },
+        { "ia", "@parameter.inner",   "Select inside parameter" },
         { "ai", "@conditional.outer", "Select around conditional" },
         { "ii", "@conditional.inner", "Select inside conditional" },
-        { "al", "@loop.outer", "Select around loop" },
-        { "il", "@loop.inner", "Select inside loop" },
+        { "al", "@loop.outer",        "Select around loop" },
+        { "il", "@loop.inner",        "Select inside loop" },
       }
       for _, map in ipairs(select_maps) do
         vim.keymap.set({ "x", "o" }, map[1], function()
@@ -116,16 +116,16 @@ return {
 
       -- Move: goto next/prev
       local move_maps = {
-        { "]f", "goto_next_start", "@function.outer", "Next function start" },
-        { "]c", "goto_next_start", "@class.outer", "Next class/struct start" },
-        { "]a", "goto_next_start", "@parameter.inner", "Next parameter" },
-        { "]F", "goto_next_end", "@function.outer", "Next function end" },
-        { "]C", "goto_next_end", "@class.outer", "Next class/struct end" },
-        { "[f", "goto_previous_start", "@function.outer", "Previous function start" },
-        { "[c", "goto_previous_start", "@class.outer", "Previous class/struct start" },
+        { "]f", "goto_next_start",     "@function.outer",  "Next function start" },
+        { "]c", "goto_next_start",     "@class.outer",     "Next class/struct start" },
+        { "]a", "goto_next_start",     "@parameter.inner", "Next parameter" },
+        { "]F", "goto_next_end",       "@function.outer",  "Next function end" },
+        { "]C", "goto_next_end",       "@class.outer",     "Next class/struct end" },
+        { "[f", "goto_previous_start", "@function.outer",  "Previous function start" },
+        { "[c", "goto_previous_start", "@class.outer",     "Previous class/struct start" },
         { "[a", "goto_previous_start", "@parameter.inner", "Previous parameter" },
-        { "[F", "goto_previous_end", "@function.outer", "Previous function end" },
-        { "[C", "goto_previous_end", "@class.outer", "Previous class/struct end" },
+        { "[F", "goto_previous_end",   "@function.outer",  "Previous function end" },
+        { "[C", "goto_previous_end",   "@class.outer",     "Previous class/struct end" },
       }
       for _, map in ipairs(move_maps) do
         vim.keymap.set({ "n", "x", "o" }, map[1], function()
@@ -287,58 +287,17 @@ return {
         },
       })
       wk.add({
-        { "<leader>h", group = "Git hunks" },
+        { "<leader>h",  group = "Git hunks" },
         { "<leader>ht", group = "Toggle" },
-        { "<leader>g", group = "Git" },
-        { "<leader>l", group = "Lint" },
-        { "<leader>p", group = "Project/Files" },
-        { "<leader>s", group = "Search/Replace" },
-        { "<leader>t", group = "Terminal/Services" },
-        { "<leader>v", group = "LSP" },
+        { "<leader>g",  group = "Git" },
+        { "<leader>l",  group = "Lint" },
+        { "<leader>p",  group = "Project/Files" },
+        { "<leader>s",  group = "Search/Replace" },
+        { "<leader>t",  group = "Terminal/Services" },
+        { "<leader>v",  group = "LSP" },
         { "<leader>vc", group = "Code actions" },
         { "<leader>vr", group = "Refactor" },
       })
     end,
-  },
-
-  {
-    "github/copilot.vim",
-    event = "InsertEnter",
-    cmd = "Copilot",
-    config = function()
-      vim.g.copilot_no_tab_map = true
-      vim.keymap.set("i", "<C-l>", 'copilot#Accept("<CR>")',
-        { expr = true, replace_keycodes = false, desc = "Copilot: accept" })
-    end,
-  },
-
-  {
-    "yetone/avante.nvim",
-    branch = "main",
-    build = "make",
-    event = "VeryLazy",
-    version = false,
-    opts = {
-      instructions_file = "avante.md",
-      provider = "copilot",
-      providers = {
-        copilot = {
-          extra_request_body = {
-            temperature = 0.75,
-          },
-        },
-      },
-    },
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "MunifTanjim/nui.nvim",
-      {
-        "MeanderingProgrammer/render-markdown.nvim",
-        opts = {
-          file_types = { "markdown", "Avante" },
-        },
-        ft = { "markdown", "Avante" },
-      },
-    },
   },
 }

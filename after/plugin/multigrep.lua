@@ -1,4 +1,5 @@
-local pickers = require "telescope.pickers"
+local ok, pickers = pcall(require, "telescope.pickers")
+if not ok then return end
 local finders = require "telescope.finders"
 local make_entry = require "telescope.make_entry"
 local conf = require "telescope.config".values
