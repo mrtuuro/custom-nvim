@@ -1,5 +1,7 @@
+-- Single source of truth for leaders. remap.lua loads before lazy.lua
+-- (see init.lua), so this must run before any <leader>/<localleader> mapping.
 vim.g.mapleader = " "
-vim.g.maplocalleader = ' '
+vim.g.maplocalleader = " "
 vim.keymap.set("n", "<leader>pv", "<cmd>Oil --float<CR>", { desc = "Open file explorer (Oil float)" })
 
 
@@ -60,23 +62,18 @@ vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz", { desc = "Location list pre
 vim.keymap.set("n", "<leader>ss", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Search and replace word" })
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true, desc = "Make file executable" })
 
-vim.keymap.set("n", "<leader>vpp", "<cmd>e ~/.dotfiles/nvim/.config/nvim/lua/theprimeagen/packer.lua<CR>", { desc = "Edit packer config" });
-vim.keymap.set("n", "<leader>mr", "<cmd>CellularAutomaton make_it_rain<CR>", { desc = "Make it rain" });
-
 vim.keymap.set("n", "<leader><leader>", function()
     vim.cmd("so")
 end, { desc = "Source current file" })
 
-vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Search and replace word" })
-
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
---  See `:help vim.highlight.on_yank()`
+--  See `:help vim.hl.on_yank()`
 vim.api.nvim_create_autocmd('TextYankPost', {
     desc = 'Highlight when yanking (copying) text',
     group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
     callback = function()
-        vim.highlight.on_yank()
+        vim.hl.on_yank()
     end,
 })
 
@@ -92,7 +89,7 @@ vim.keymap.set("n", "<leader>st", function ()
     job_id = vim.bo.channel
 end, { desc = "Open split terminal" })
 
-vim.keymap.set("n", "<leader>cmd", function ()
+vim.keymap.set("n", "<leader>tc", function ()
     -- make
     -- terminal automatization added like this
     vim.fn.chansend(job_id, { "ll \r\n" })

@@ -6,8 +6,8 @@ local lsp_attach = function(_, bufnr)
   vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = bufnr, desc = "Hover info" })
   vim.keymap.set("n", "<leader>vws", vim.lsp.buf.workspace_symbol, { buffer = bufnr, desc = "Workspace symbol search" })
   vim.keymap.set("n", "<leader>vd", vim.diagnostic.open_float, { buffer = bufnr, desc = "Open diagnostic float" })
-  vim.keymap.set("n", "[d", vim.diagnostic.goto_next, { buffer = bufnr, desc = "Next diagnostic" })
-  vim.keymap.set("n", "]d", vim.diagnostic.goto_prev, { buffer = bufnr, desc = "Previous diagnostic" })
+  vim.keymap.set("n", "]d", function() vim.diagnostic.jump({ count = 1, float = true }) end, { buffer = bufnr, desc = "Next diagnostic" })
+  vim.keymap.set("n", "[d", function() vim.diagnostic.jump({ count = -1, float = true }) end, { buffer = bufnr, desc = "Previous diagnostic" })
 
   vim.keymap.set("n", "<leader>vca", vim.lsp.buf.code_action, { buffer = bufnr, desc = "Code actions" })
   vim.keymap.set("n", "<leader>vrr", vim.lsp.buf.references, { buffer = bufnr, desc = "Show references" })
@@ -58,6 +58,7 @@ cmp.setup({
   sources = {
     { name = 'nvim_lsp' },
     { name = 'buffer' },
+    { name = 'path' },
   },
   snippet = {
     expand = function(args)

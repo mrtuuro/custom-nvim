@@ -6,6 +6,8 @@ return {
     config = true
   },
 
+  -- Available alternative theme. Active colorscheme is set once in
+  -- after/plugin/colors.lua (kanagawa). To switch, change that file.
   {
     'folke/tokyonight.nvim',
     config = function()
@@ -14,7 +16,6 @@ return {
         transparent = false,
         terminal_colors = true,
       })
-      vim.cmd('colorscheme tokyonight')
     end,
   },
 
@@ -46,14 +47,36 @@ return {
   },
 
   { 'neovim/nvim-lspconfig' },
+
+  -- LSP server installer. Just ensures servers are installed; enabling +
+  -- config stays explicit in after/plugin/lsp.lua (automatic_enable = false).
+  {
+    "williamboman/mason.nvim",
+    config = true,
+  },
+  {
+    "williamboman/mason-lspconfig.nvim",
+    dependencies = { "williamboman/mason.nvim", "neovim/nvim-lspconfig" },
+    opts = {
+      ensure_installed = { "gopls", "lua_ls", "vtsls", "jdtls", "clangd" },
+      automatic_enable = false,
+    },
+  },
+
   { 'hrsh7th/cmp-nvim-lsp' },
+  { 'hrsh7th/cmp-buffer' },
+  { 'hrsh7th/cmp-path' },
   { 'hrsh7th/nvim-cmp' },
 
   {
     'echasnovski/mini.nvim',
     config = function()
-      local statusline = require 'mini.statusline'
-      statusline.setup { use_icons = true }
+      require('mini.statusline').setup { use_icons = true }
+      -- Add/delete/replace surroundings: sa, sd, sr (+ sf/sF/sh/sn).
+      -- Note: this takes over the bare `s` prefix (substitute char).
+      require('mini.surround').setup()
+      -- Smarter a/i textobjects (brackets, quotes, args, etc.).
+      require('mini.ai').setup()
     end
   },
 
@@ -293,7 +316,7 @@ return {
         { "<leader>l",  group = "Lint" },
         { "<leader>p",  group = "Project/Files" },
         { "<leader>s",  group = "Search/Replace" },
-        { "<leader>t",  group = "Terminal/Services" },
+        { "<leader>t",  group = "Terminal" },
         { "<leader>v",  group = "LSP" },
         { "<leader>vc", group = "Code actions" },
         { "<leader>vr", group = "Refactor" },
