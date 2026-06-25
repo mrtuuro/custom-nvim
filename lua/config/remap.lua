@@ -50,9 +50,25 @@ vim.keymap.set("v", "<leader>c", ":normal ='<,'> | w<CR>", {
   desc = 'Reindent selection and save'
 })
 
-vim.keymap.set("n", "<leader>li", "<cmd>!golangci-lint run %<CR>", {desc = "Run golint on current file",silent = true,})
+-- Run a shell command and load its output into the quickfix list so you can
+-- jump straight to the offending file:line with :cnext / <C-k>.
+local function go_qf(cmd, title)
+  local output = vim.fn.system(cmd)
+  vim.fn.setqflist({}, " ", {
+    title = title,
+    lines = vim.split(output, "\n", { trimempty = true }),
+    efm = "%f:%l:%c: %m,%f:%l: %m",
+  })
+  vim.cmd("copen")
+end
 
-vim.keymap.set("n", "<leader>ve", "<cmd>!go vet <CR>", {desc = "Run go vet on package",silent = true,})
+vim.keymap.set("n", "<leader>li", function()
+  go_qf("golangci-lint run " .. vim.fn.shellescape(vim.fn.expand("%")), "golangci-lint")
+end, { desc = "golangci-lint current file -> quickfix", silent = true })
+
+vim.keymap.set("n", "<leader>ve", function()
+  go_qf("go vet " .. vim.fn.shellescape(vim.fn.expand("%:p:h")), "go vet")
+end, { desc = "go vet package -> quickfix", silent = true })
 
 vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz", { desc = "Quickfix next (centered)" })
 vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz", { desc = "Quickfix previous (centered)" })
@@ -60,7 +76,7 @@ vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz", { desc = "Location list nex
 vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz", { desc = "Location list previous" })
 
 vim.keymap.set("n", "<leader>ss", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Search and replace word" })
-vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true, desc = "Make file executable" })
+vim.keymap.set("n", "<leader>X", "<cmd>!chmod +x %<CR>", { silent = true, desc = "Make file executable" })
 
 vim.keymap.set("n", "<leader><leader>", function()
     vim.cmd("so")

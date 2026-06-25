@@ -68,6 +68,16 @@ return {
   { 'hrsh7th/cmp-path' },
   { 'hrsh7th/nvim-cmp' },
 
+  -- Snippet engine + source + a community snippet collection.
+  {
+    "L3MON4D3/LuaSnip",
+    dependencies = { "rafamadriz/friendly-snippets" },
+    config = function()
+      require("luasnip.loaders.from_vscode").lazy_load()
+    end,
+  },
+  { "saadparwaiz1/cmp_luasnip" },
+
   {
     'echasnovski/mini.nvim',
     config = function()
@@ -298,6 +308,84 @@ return {
     end,
   },
 
+  -- Go tooling: :GoIfErr, :GoFillStruct, :GoAddTag, :GoTestFunc, etc.
+  -- lsp_cfg=false because gopls is configured in after/plugin/lsp.lua.
+  {
+    "ray-x/go.nvim",
+    dependencies = { "ray-x/guihua.lua", "neovim/nvim-lspconfig", "nvim-treesitter/nvim-treesitter" },
+    ft = { "go", "gomod" },
+    config = function()
+      require("go").setup({
+        lsp_cfg = false,
+        lsp_keymaps = false,
+        lsp_inlay_hints = { enable = false },
+        trouble = true,
+        luasnip = true,
+      })
+    end,
+  },
+
+  -- Debugger (DAP) with Go adapter (delve) + auto-opening UI.
+  {
+    "mfussenegger/nvim-dap",
+    dependencies = {
+      "leoluz/nvim-dap-go",
+      { "rcarriga/nvim-dap-ui", dependencies = { "nvim-neotest/nvim-nio" } },
+    },
+    config = function()
+      local dap = require("dap")
+      local dapui = require("dapui")
+      require("dap-go").setup()
+      dapui.setup()
+
+      -- Auto open/close the UI with the debug session
+      dap.listeners.before.attach.dapui_config = function() dapui.open() end
+      dap.listeners.before.launch.dapui_config = function() dapui.open() end
+      dap.listeners.before.event_terminated.dapui_config = function() dapui.close() end
+      dap.listeners.before.event_exited.dapui_config = function() dapui.close() end
+
+      vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint, { desc = "DAP: toggle breakpoint" })
+      vim.keymap.set("n", "<leader>B", function()
+        dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
+      end, { desc = "DAP: conditional breakpoint" })
+      vim.keymap.set("n", "<F5>", dap.continue, { desc = "DAP: continue/start" })
+      vim.keymap.set("n", "<F10>", dap.step_over, { desc = "DAP: step over" })
+      vim.keymap.set("n", "<F11>", dap.step_into, { desc = "DAP: step into" })
+      vim.keymap.set("n", "<S-F11>", dap.step_out, { desc = "DAP: step out" })
+      vim.keymap.set("n", "<F4>", function() require("dap-go").debug_test() end, { desc = "DAP: debug nearest Go test" })
+      vim.keymap.set("n", "<F6>", dapui.toggle, { desc = "DAP: toggle UI" })
+    end,
+  },
+
+  -- Pretty list for diagnostics / references / quickfix.
+  {
+    "folke/trouble.nvim",
+    cmd = "Trouble",
+    keys = {
+      { "<leader>xx", "<cmd>Trouble diagnostics toggle<CR>", desc = "Trouble: workspace diagnostics" },
+      { "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<CR>", desc = "Trouble: buffer diagnostics" },
+      { "<leader>xs", "<cmd>Trouble symbols toggle focus=false<CR>", desc = "Trouble: symbols" },
+      { "<leader>xr", "<cmd>Trouble lsp toggle focus=false win.position=right<CR>", desc = "Trouble: LSP references/defs" },
+      { "<leader>xl", "<cmd>Trouble loclist toggle<CR>", desc = "Trouble: location list" },
+      { "<leader>xq", "<cmd>Trouble qflist toggle<CR>", desc = "Trouble: quickfix" },
+    },
+    opts = {},
+  },
+
+  -- Highlight + search TODO/FIXME/HACK/NOTE comments.
+  {
+    "folke/todo-comments.nvim",
+    event = { "BufReadPost", "BufNewFile" },
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      local todo = require("todo-comments")
+      todo.setup()
+      vim.keymap.set("n", "]t", function() todo.jump_next() end, { desc = "Next todo comment" })
+      vim.keymap.set("n", "[t", function() todo.jump_prev() end, { desc = "Previous todo comment" })
+      vim.keymap.set("n", "<leader>pt", "<cmd>TodoTelescope<CR>", { desc = "Search todos (Telescope)" })
+    end,
+  },
+
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
@@ -317,6 +405,7 @@ return {
         { "<leader>p",  group = "Project/Files" },
         { "<leader>s",  group = "Search/Replace" },
         { "<leader>t",  group = "Terminal" },
+        { "<leader>x",  group = "Trouble/Diagnostics" },
         { "<leader>v",  group = "LSP" },
         { "<leader>vc", group = "Code actions" },
         { "<leader>vr", group = "Refactor" },
