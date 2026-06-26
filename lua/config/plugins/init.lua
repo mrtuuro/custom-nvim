@@ -367,12 +367,16 @@ return {
     keys = {
       { "<leader>xx", "<cmd>Trouble diagnostics toggle<CR>", desc = "Trouble: workspace diagnostics" },
       { "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<CR>", desc = "Trouble: buffer diagnostics" },
-      { "<leader>xs", "<cmd>Trouble symbols toggle focus=false<CR>", desc = "Trouble: symbols" },
-      { "<leader>xr", "<cmd>Trouble lsp toggle focus=false win.position=right<CR>", desc = "Trouble: LSP references/defs" },
+      { "<leader>xs", "<cmd>Trouble symbols toggle focus=false win.position=bottom<CR>", desc = "Trouble: symbols" },
+      { "<leader>xr", "<cmd>Trouble lsp toggle focus=false win.position=bottom<CR>", desc = "Trouble: LSP references/defs" },
       { "<leader>xl", "<cmd>Trouble loclist toggle<CR>", desc = "Trouble: location list" },
       { "<leader>xq", "<cmd>Trouble qflist toggle<CR>", desc = "Trouble: quickfix" },
     },
-    opts = {},
+    opts = {
+      -- Bottom split, full width, comfortable height; wrap so long lines
+      -- aren't cut off horizontally.
+      win = { position = "bottom", size = 0.3, wo = { wrap = true } },
+    },
   },
 
   -- Highlight + search TODO/FIXME/HACK/NOTE comments.
