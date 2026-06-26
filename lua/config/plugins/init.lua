@@ -219,7 +219,9 @@ return {
           ["<CR>"] = "actions.select",
           ["<C-v>"] = "actions.select_vsplit",
           ["<C-x>"] = "actions.select_split",
-          ["<C-t>"] = "actions.select_tab",
+          -- <C-t> intentionally not bound here so it falls through to the
+          -- global Harpoon "file 2" mapping. Use "t" to open in a new tab.
+          ["t"] = "actions.select_tab",
           ["<C-p>"] = "actions.preview",
           ["q"] = "actions.close",
           ["-"] = "actions.parent",
