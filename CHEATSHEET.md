@@ -28,15 +28,23 @@ Open this anytime with  <leader>?   ·   close with  q  or  <Esc>
   <leader>ss         search/replace word under cursor
   <leader>pd ✨      telescope: diagnostics list
 
-## LSP / code intelligence
-  gd                 go to definition        gD       go to implementation
-  K                  hover info              <leader>vrr   references
-  <leader>vrn        rename                  <leader>vca   code action
-  <leader>vws        workspace symbol        <leader>f     format buffer
-  <leader>vd         line diagnostic float
-  ]d / [d ✨         next / prev diagnostic
-  <C-h> (insert)     signature help
+## LSP / code intelligence  (all the navigators use Telescope: preview + resume)
+  gd                 definition          gD       implementation
+  gy ✨              type definition     K        hover info
+  <leader>vrr        references (who USES this)
+  <leader>vi ✨      incoming calls (who CALLS this)
+  <leader>vs ✨      document symbols (fuzzy-jump within file)
+  <leader>vws        workspace symbols (fuzzy-jump across project)
+  <leader>vca        code action         <leader>vrn   rename
+  <leader>vd         line diagnostic     ]d / [d ✨    next / prev diagnostic
+  <leader>f          format buffer       <C-h> (insert) signature help
   (format also runs automatically on :w — goimports + gofumpt)
+
+  >> Go-back-and-forth (the key trick):
+     <C-o>           jump BACK (after gd/gD/grr...)      <C-i>   jump forward
+     <leader>pr      RESUME last list (reopen references without re-querying)
+     In any Telescope list: <C-v> open in vsplit (see both sides), <CR> jump,
+                            <C-p> scroll-preview the hit before committing
 
 ## Completion & snippets (insert mode)
   <C-n> / <C-p>      next / prev suggestion

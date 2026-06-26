@@ -1,18 +1,30 @@
 -- Keymaps applied when an LSP attaches
 local lsp_attach = function(_, bufnr)
+  -- Prefer Telescope pickers (preview + <leader>pr resume); fall back to raw
+  -- vim.lsp.buf.* if Telescope isn't available. Single results still jump
+  -- straight through; multiple results open a previewable list.
+  local tb_ok, tb = pcall(require, "telescope.builtin")
+  local function map(lhs, fn, desc)
+    vim.keymap.set("n", lhs, fn, { buffer = bufnr, desc = desc })
+  end
 
-  vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = bufnr, desc = "Go to definition" })
-  vim.keymap.set("n", "gD", vim.lsp.buf.implementation, { buffer = bufnr, desc = "Go to implementation" })
-  vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = bufnr, desc = "Hover info" })
-  vim.keymap.set("n", "<leader>vws", vim.lsp.buf.workspace_symbol, { buffer = bufnr, desc = "Workspace symbol search" })
-  vim.keymap.set("n", "<leader>vd", vim.diagnostic.open_float, { buffer = bufnr, desc = "Open diagnostic float" })
-  vim.keymap.set("n", "]d", function() vim.diagnostic.jump({ count = 1, float = true }) end, { buffer = bufnr, desc = "Next diagnostic" })
-  vim.keymap.set("n", "[d", function() vim.diagnostic.jump({ count = -1, float = true }) end, { buffer = bufnr, desc = "Previous diagnostic" })
+  -- Navigation: jump out with these, jump BACK with <C-o>, forward with <C-i>
+  map("gd", tb_ok and tb.lsp_definitions or vim.lsp.buf.definition, "Go to definition")
+  map("gD", tb_ok and tb.lsp_implementations or vim.lsp.buf.implementation, "Go to implementation")
+  map("gy", tb_ok and tb.lsp_type_definitions or vim.lsp.buf.type_definition, "Go to type definition")
+  map("<leader>vrr", tb_ok and tb.lsp_references or vim.lsp.buf.references, "References (who uses this)")
+  map("<leader>vi", tb_ok and tb.lsp_incoming_calls or vim.lsp.buf.incoming_calls, "Incoming calls (who calls this)")
+  map("<leader>vws", tb_ok and tb.lsp_dynamic_workspace_symbols or vim.lsp.buf.workspace_symbol, "Workspace symbol search")
+  if tb_ok then
+    map("<leader>vs", tb.lsp_document_symbols, "Document symbols (jump in file)")
+  end
 
-  vim.keymap.set("n", "<leader>vca", vim.lsp.buf.code_action, { buffer = bufnr, desc = "Code actions" })
-  vim.keymap.set("n", "<leader>vrr", vim.lsp.buf.references, { buffer = bufnr, desc = "Show references" })
-
-  vim.keymap.set("n", "<leader>vrn", vim.lsp.buf.rename, { buffer = bufnr, desc = "Rename symbol" })
+  map("K", vim.lsp.buf.hover, "Hover info")
+  map("<leader>vd", vim.diagnostic.open_float, "Open diagnostic float")
+  map("]d", function() vim.diagnostic.jump({ count = 1, float = true }) end, "Next diagnostic")
+  map("[d", function() vim.diagnostic.jump({ count = -1, float = true }) end, "Previous diagnostic")
+  map("<leader>vca", vim.lsp.buf.code_action, "Code actions")
+  map("<leader>vrn", vim.lsp.buf.rename, "Rename symbol")
   vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, { buffer = bufnr, desc = "Signature help" })
 end
 
