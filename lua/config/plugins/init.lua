@@ -321,6 +321,7 @@ return {
         lsp_cfg = false,
         lsp_keymaps = false,
         lsp_inlay_hints = { enable = false },
+        lsp_codelens = false, -- avoids InsertLeave codelens.refresh error on *.go
         trouble = true,
         luasnip = true,
       })
