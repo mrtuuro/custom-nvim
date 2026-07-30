@@ -100,18 +100,25 @@ return {
 
   {
     'nvim-treesitter/nvim-treesitter',
-    branch = 'master',
+    branch = 'main',
+    lazy = false,
     build = ':TSUpdate',
     dependencies = {
       "nvim-treesitter/nvim-treesitter-textobjects",
     },
     config = function()
-      require("nvim-treesitter.configs").setup({
-        ensure_installed = { "lua", "c", "go" },
-        auto_install = false,
-        highlight = {
-          enable = true,
-        },
+      require("nvim-treesitter").setup()
+      require("nvim-treesitter").install({
+        "lua", "c", "go", "gomod", "gosum", "markdown", "markdown_inline",
+      })
+
+      -- main branch'te highlight plugin tarafından açılmıyor; Neovim'in kendi
+      -- vim.treesitter.start()'ı ile açılıyor. pcall, parser'ı olmayan
+      -- filetype'larda sessizce geçmek için.
+      vim.api.nvim_create_autocmd("FileType", {
+        callback = function(ev)
+          pcall(vim.treesitter.start, ev.buf)
+        end,
       })
 
       -- Textobjects config
